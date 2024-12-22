@@ -5,5 +5,96 @@
 }
 
 body {
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    color: #9FB1BC;
+
+}
+
+h1, .footer, .body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 5rem;
+    background-color: #2E5266;
+}
+
+
+.body {
+    padding: 5rem 5rem;
+    flex: 1;
+    gap: 2rem;
+    background-color: #6E8898;
+    color: #D3D0CB;
+}
+
+.container {
+    display: flex;
+    gap: 2rem;
+}
+
+.container--opponent {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #2E5266;
+    border: solid #a3e3f7 2px;
+    box-shadow: inset 0px 0px 5px;
+    color: #D3D0CB;
+    padding: 1.5rem;
+    border-radius: 10px;
+    justify-content: space-between;
+}
+
+.container--opponent div {
+    display: flex;
+    gap: 1rem;
+
+}
+button {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+border: solid black 2px;
+background-color: white;
+background-position: center;
+background-size: 80%;
+background-repeat: no-repeat;
+}
+
+.player button:hover {
+    box-shadow: 0px 0px 5px black;
+    cursor: pointer;
+}
+
+.player button:first-child {
+    background-image: url(./images/rock.gif);
+}
+
+
+.player button:nth-child(2) {
+    background-image: url(./images/paper.gif);
+}
+.player button:nth-child(3) {
+    background-image: url(./images/scissors.gif);
+}
+
+.npc button {
     background-color: black;
+}
+
+
+span {
+    color: #a3e3f7;
+}
+
+.tracker {
+    color: #2E5266;
 }
