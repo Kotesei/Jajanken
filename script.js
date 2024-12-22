@@ -3,6 +3,11 @@
 // Selects all buttons in HTML
 const buttons = document.querySelectorAll("button")
 
+// Scoreboard variables
+let playerWins = 0;
+let playerLosses = 0;
+let playerTies = 0;
+
 // Function to start Rock, Paper, Scissors
 function jajanken(npc, player) {
 console.log(npc);
