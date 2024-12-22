@@ -3,6 +3,13 @@
 // Selects all buttons in HTML
 const buttons = document.querySelectorAll("button")
 
+// Jajanken values
+const jajankenValues = {
+    0: "Rock",
+    1: "Paper",
+    2: "Scissors"
+}
+
 // Scoreboard variables
 let playerWins = 0;
 let playerLosses = 0;
@@ -12,6 +19,22 @@ let playerTies = 0;
 function jajanken(npc, player) {
 console.log(npc);
 console.log(player);
+
+// Handles if rock is picked over scissors
+
+
+// Handles losing
+// if (npc > player || npc === 0 && player === 2) {
+// console.log("You lost!");
+// }
+
+// Handles tie
+
+
+// Handles win
+// if (player > npc || player === 0 && npc === 2) {
+//     console.log("You win!");
+//     }
 }
 
 // Function to get NPC choice
@@ -21,7 +44,7 @@ function getComputerChoice() {
 
 // Function to get player choice
 function getPlayerChoice(num) {
-    return num
+    return Number(num)
 }
 
 // Gives each button an ID, added - 1 to ignore the last button
