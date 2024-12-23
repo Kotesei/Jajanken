@@ -22,55 +22,67 @@ const jajankenValues = {
 let playerWins = 0;
 let playerLosses = 0;
 let playerTies = 0;
-let curRounds = 0;
+let curRounds = 1;
 
+function animateBtns(gameState) {
+    // Get the buttons
+    const revealBtns = document.querySelectorAll('.container--opponent button')
+ 
+    // Calls animateBtns when game starts and reveals all buttons
+    if (gameState === 'start') {
+    revealBtns.forEach(btn => {
+        btn.style.opacity = "1"
+        btn.style.bottom = "0px"
+       })
+
+    return
+}
+    // Calls animateBtns when curRounds >= state
+  if (gameState === 'end') {
+    console.log('testdata');
+    revealBtns.forEach(btn => {
+        console.log(btn);
+        btn.style.opacity = "0"
+        btn.style.bottom = "-100px"
+       })
+
+       return
+  }
+    
+  
+}
 
 // Function to start Rock, Paper, Scissors
 function jajanken(npc, player, maxRounds) {
+    
+    
+    // Shows user the rounds.
+    
     // Stop game if current round reaches maxRounds
     if (curRounds >= maxRounds) {
+        animateBtns('end');
+        
+        
         // See if player or NPC has more and say who wins.
-        return
-    };
-    curRounds++
-
-    // Shows user the rounds.
-    body.firstChild.innerHTML = `Round: <span class="setRounds">${curRounds} / ${maxRounds}</span>`;
+        console.log("game is over!");
+        updateScore(npc, player, maxRounds);
+        
+    } else {
+        curRounds++
+        body.firstChild.innerHTML = `Round: <span class="setRounds">${curRounds} / ${maxRounds}</span>`;
    
-// Allow NPC choice to fade in/out and only play once it's called for.
-
-// NPC button is revealed based off the choice they made.
-npcBtn.style.backgroundColor = "white"
-npcBtn.style.backgroundImage = `url(./images/${jajankenValues[npc]}.gif)`
-
-// Handles losing
-if (npc > player && !(player === 0 && npc === 2) || player === 2 && npc === 0) {
-    playerLosses++
-    console.log(`You Lose! ${jajankenValues[npc]} beats ${jajankenValues[player]}`);
-    losses.innerHTML = ` ${playerLosses}`
-    npcScore.innerHTML++
-
-}
-
-
-// Handles tie
-if (npc === player) {
-    playerTies++;
-    console.log(`It's a tie! You both picked ${jajankenValues[npc]}`);
-    ties.innerHTML = ` ${playerTies}`
+        // Allow NPC choice to fade in/out and only play once it's called for.
+        
+        // NPC button is revealed based off the choice they made.
+        npcBtn.style.backgroundColor = "white"
+        npcBtn.style.backgroundImage = `url(./images/${jajankenValues[npc]}.gif)`
+        
+        // Check who wins / loses
+        updateScore(npc, player, maxRounds);
+        
+    };
     
     
-}
-
-// Handles win
-if (npc < player && !(player === 2 && npc === 0) || player === 0 && npc === 2) {
-    playerWins++
-    console.log(`You win! ${jajankenValues[player]} beats ${jajankenValues[npc]}`);
-    wins.innerHTML = ` ${playerWins}`
-    playerScore.innerHTML++
-}
-
-console.log(`That makes ${playerWins} wins, ${playerLosses} losses, and ${playerTies} ties`);
 
 }
 
@@ -89,6 +101,38 @@ function setRounds(num) {
     return Number(num)
 }
 
+// Function to update score
+function updateScore(npc, player) {
+    // Handles losing
+    if (npc > player && !(player === 0 && npc === 2) || player === 2 && npc === 0) {
+        playerLosses++
+        console.log(`You Lose! ${jajankenValues[npc]} beats ${jajankenValues[player]}`);
+        losses.innerHTML = ` ${playerLosses}`
+        npcScore.innerHTML++
+    
+    }
+    
+    
+    // Handles tie
+    if (npc === player) {
+        playerTies++;
+        console.log(`It's a tie! You both picked ${jajankenValues[npc]}`);
+        ties.innerHTML = ` ${playerTies}`
+        
+        
+    }
+    
+    // Handles win
+    if (npc < player && !(player === 2 && npc === 0) || player === 0 && npc === 2) {
+        playerWins++
+        console.log(`You win! ${jajankenValues[player]} beats ${jajankenValues[npc]}`);
+        wins.innerHTML = ` ${playerWins}`
+        playerScore.innerHTML++
+    }
+    
+    console.log(`That makes ${playerWins} wins, ${playerLosses} losses, and ${playerTies} ties`);
+}
+
 
 
 //////////////////
@@ -100,7 +144,7 @@ function setRounds(num) {
 playBtn.addEventListener("click", function() {
     const roundsContainer = `<h2>Start Game!!!<span class="setRounds"></span></h2>`
     body.insertAdjacentHTML("afterbegin", roundsContainer)
-   
+    animateBtns('start')
 
     for (let i = 0; i < buttons.length; i++) {
         // If button has either the play--btn or npc--btn don't continue
