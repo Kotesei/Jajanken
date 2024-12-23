@@ -22,7 +22,7 @@ const jajankenValues = {
 let playerWins = 0;
 let playerLosses = 0;
 let playerTies = 0;
-let curRounds = 1;
+let curRounds;
 
 function animateBtns(gameState) {
     // Get the buttons
@@ -39,7 +39,7 @@ function animateBtns(gameState) {
 }
     // Calls animateBtns when curRounds >= state
   if (gameState === 'end') {
-    console.log('testdata');
+    endGame();
     revealBtns.forEach(btn => {
         console.log(btn);
         btn.style.opacity = "0"
@@ -139,43 +139,65 @@ function updateScore(npc, player) {
 
 // Add a h2 element above the game that mentions which round it is currently on.
 
+// Mouse enter player choice
+function playerSelectingChoice(e) {
+    e.target.style.backgroundImage = `url(./images/${jajankenValues[e.target.id]}.gif)`;
+}
+
+// Mouse exit player choice
+function playerExitChoice(e) {  e.target.style.backgroundImage = `url(./images/idle.png)`;}
+
+// Player clicks choice
+function playerChoice(userInput, rounds) {
+    jajanken(getComputerChoice(), getPlayerChoice(userInput), setRounds(rounds))
+}
+
+
 
 // Create a Play button that takes user input for rounds.
-playBtn.addEventListener("click", function() {
+function startGame() {
+    curRounds = 1;
     const roundsContainer = `<h2>Start Game!!!<span class="setRounds"></span></h2>`
-    body.insertAdjacentHTML("afterbegin", roundsContainer)
-    animateBtns('start')
+        body.insertAdjacentHTML("afterbegin", roundsContainer)
+        animateBtns('start')
+    
+        for (let i = 0; i < buttons.length; i++) {
+            // If button has either the play--btn or npc--btn don't continue
+               if (buttons[i].classList.contains("npc--btn") || buttons[i].classList.contains("play--btn")) return
+    
+            // Give each button an ID
+               buttons[i].id = i
 
-    for (let i = 0; i < buttons.length; i++) {
-        // If button has either the play--btn or npc--btn don't continue
-           if (buttons[i].classList.contains("npc--btn") || buttons[i].classList.contains("play--btn")) return
+               function playerChoiceHandler() {
+                playerChoice(buttons[i].id, 5)
+            }
+               
+               // Give each choice a static fist image
+               buttons[i].style.backgroundImage = `url(./images/idle.png)`;
+    
+               // On mouse enter (hover) it'll play the gif
+                buttons[i].addEventListener('mouseenter', playerSelectingChoice)
+    
+                // On mouse exit it'll switch back to static image
+                buttons[i].addEventListener('mouseleave', playerExitChoice)
+    
+                // Runs the function to get the NPC choice and Player choice
+                buttons[i].addEventListener("click", playerChoiceHandler);
 
-        // Give each button an ID
-           buttons[i].id = i
-           
-           // Give each choice a static fist image
-           buttons[i].style.backgroundImage = `url(./images/idle.png)`;
+            playBtn.removeEventListener("click", startGame)
+    } 
+   
+}
 
-           // On mouse enter (hover) it'll play the gif
-            buttons[i].addEventListener('mouseenter', function(e) {
-                
-                e.target.style.backgroundImage = `url(./images/${jajankenValues[e.target.id]}.gif)`;})
-
-            // On mouse exit it'll switch back to static image
-            buttons[i].addEventListener('mouseleave', function(e) {
-
-                e.target.style.backgroundImage = `url(./images/idle.png)`;})
-
-            // Runs the function to get the NPC choice and Player choice
-            buttons[i].addEventListener("click", function() {
-
-                jajanken(getComputerChoice(), getPlayerChoice(buttons[i].id), setRounds(5))
-        });
+// ends the current game
+function endGame() {
+    playBtn.addEventListener("click", startGame);
 
 }
 
-// Only listen once.
-}, {once: true})
+// Play Button event listener
+playBtn.addEventListener("click", startGame);
+    
 
 
 // Change the scoreboard so that it can tally the rounds and add the score under the players.
