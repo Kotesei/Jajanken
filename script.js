@@ -13,7 +13,8 @@ const losses = document.querySelector(".losses")
 const ties = document.querySelector(".ties")
 const npcScore = document.querySelector(".npcPoints");
 const playerScore = document.querySelector(".playerPoints");
-let roundsContainer;
+const roundsContainer = document.querySelector(".roundh2");
+
 
 // Jajanken values
 const jajankenValues = {
@@ -54,8 +55,12 @@ const brainrotResponses = {
 };
 
 let timeout;
+let timeoutHide;
+let timeoutChangeH2;
 function animateBtns(gameState, npc) {
     clearTimeout(timeout)
+    clearTimeout(timeoutHide)
+    clearTimeout(timeoutChangeH2)
  
     // Calls animateBtns when game starts and reveals all buttons
     if (gameState === 'start') {
@@ -63,10 +68,12 @@ function animateBtns(gameState, npc) {
         playerAction.innerHTML = "";
         npcAction.innerHTML = "";
         npcBtn.style.backgroundImage = `url(./images/idle.png)`
-        npcBtn.style.transition = "bottom 2s ease, opacity 5s"
+        
     revealBtns.forEach(btn => {
-        btn.style.opacity = "1"
-        btn.style.bottom = "0px"
+        btn.style.transition = "bottom 1s ease, opacity 5s"
+            btn.style.opacity = "1"
+            btn.style.bottom = "0px"
+            
        })
 
     return
@@ -93,19 +100,31 @@ if (gameState === 'ongoing') {
 }
     // Calls animateBtns when curRounds >= state
   if (gameState === 'end') {
-    setTimeout(() => {
-        npcBtn.style.transition = "opacity 5s"
-        revealBtns.forEach(btn => {
+    roundsContainer.innerHTML = "Game Ended!"
+     revealBtns.forEach(btn => {
+            btn.style.transition = "bottom 5s ease, opacity 4s ease"
             btn.style.opacity = "0"
+        })
+    timeoutHide = setTimeout(() => {
+        revealBtns.forEach(btn => {
             btn.style.bottom = "-100px"
             
            })
            return
-    }, 2000)
+    }, 1000)
+
+    timeoutChangeH2 = setTimeout(() => {
+roundsContainer.innerHTML = "Start New Game?"
+    }, 2500)
    
   }
     
   
+}
+
+// Function to cappitalize first letter
+function capitalize(string) {
+    return String(string).charAt(0).toUpperCase() + String(string).slice(1)
 }
 
 // Function to start Rock, Paper, Scissors
@@ -123,8 +142,8 @@ function jajanken(npc, player, maxRounds) {
         updateScore(npc, player, maxRounds);
         
     } else {
-        
-        body.firstChild.innerHTML = `Round: <span class="setRounds">${curRounds + 1} / ${maxRounds}</span>`;
+        console.log(roundsContainer.innerHTML);
+        roundsContainer.innerHTML = `Round: <span class="setRounds">${curRounds + 1} / ${maxRounds}</span>`;
    
         // Allow NPC choice to fade in/out and only play once it's called for.
         
@@ -154,7 +173,7 @@ function setRounds(num) {
 // Function to update score
 function updateScore(npc, player, maxRounds) {
     playerAction.innerHTML = `You picked ${jajankenValues[player]}!`
-    npcAction.innerHTML = jajankenValues[npc]
+    npcAction.innerHTML = capitalize(jajankenValues[npc])
 
     function lose() {
         console.log(`You Lose! ${jajankenValues[npc]} beats ${jajankenValues[player]}`);
@@ -169,13 +188,15 @@ function updateScore(npc, player, maxRounds) {
     }
     function compareScore() {
         const playerPoints = playerScore.innerHTML
-        const npcPoints = npcScore.innerHTML
+        const npcPoints = npcScore.innerHTML       
         const randomIndex = Math.floor(Math.random() * 4)
+    
 
         if (playerPoints > npcPoints) {console.log("You won the game!")
             playerWins++
             wins.innerHTML = ` ${playerWins}`
             npcAction.innerHTML = brainrotResponses.loss[randomIndex];
+            
             
         };
         if (playerPoints === npcPoints) {console.log("Nobody won!")
@@ -239,11 +260,14 @@ function startGame() {
     playerScore.innerHTML = 0
     // h2 element above the game that mentions which round it is currently on.
     
-    const insertRounds = `<h2 class="roundh2">Round: <span class="setRounds">${curRounds + 1} / ${gameRounds}</span></h2>`
+    const insertRounds = `Round: <span class="setRounds">${curRounds + 1} / ${gameRounds}</span>`
+    
+    roundsContainer.innerHTML = insertRounds
 
-    if (roundsContainer === undefined) body.insertAdjacentHTML("afterbegin", insertRounds)
-        else roundsContainer.outerHTML = insertRounds
-        roundsContainer = document.querySelector(".roundh2")
+    
+    
+
+       
 
         
     
