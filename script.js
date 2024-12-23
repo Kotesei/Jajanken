@@ -7,8 +7,6 @@ const wins = document.querySelector(".wins")
 const losses = document.querySelector(".losses")
 const ties = document.querySelector(".ties")
 
-
-
 // Jajanken values
 const jajankenValues = {
     0: "rock",
@@ -67,6 +65,20 @@ function setRounds(num) {
 // Gives each button an ID, added - 1 to ignore the last button
 for (let i = 0; i < buttons.length - 1; i++) {
     buttons[i].id = i
+    buttons[i].style.backgroundImage = `url(./images/idle.png)`;
+
+    buttons[i].addEventListener('mouseenter', function(e) {
+        
+        e.target.style.backgroundImage = `url(./images/${jajankenValues[e.target.id]}.gif)`;
+    })
+
+    buttons[i].addEventListener('mouseleave', function(e) {
+        e.target.style.backgroundImage = `url(./images/idle.png)`;
+
+        
+    })
+
+    
 }
 
 // For each button we added an event listener that calls both NPC, and Player choices.

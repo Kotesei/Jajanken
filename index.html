@@ -11,6 +11,7 @@
     <h1>Jajanken!</h1>
     <div class="body">
         <div class="container">
+            <div class="opponents">
             <div class="container--opponent player">
                 <h2>PLAYER</h2>
                 <p>Pick one!</p>
@@ -19,14 +20,20 @@
                 <button></button>
                 <button></button>
             </div>
-            </div>
-            <div class="container--opponent npc">
-                <h2>NPC</h2>
-                <button class="npc--btn"></button>                
-            </div>
         </div>
+        <div class="container--opponent npc">
+            <h2>NPC</h2>
+            <button class="npc--btn"></button>                
+        </div>
+    </div>
+    <div class="currentGame">
+        <p class="playerPoints">0</p>
+        <p class="npcPoints">0</p>
+    </div>
+    </div>
+   
         <div class="tracker">
-            <h2>Scoreboard</h2>
+            <h2>SCOREBOARD</h2>
             <p>Player Wins:<span class="wins"></span></p>
             <p>Player Losses:<span class="losses"></span></p>
             <p>Player Ties:<span class="ties"></span></p>
