@@ -17,24 +17,20 @@ let playerTies = 0;
 
 // Function to start Rock, Paper, Scissors
 function jajanken(npc, player) {
-console.log(npc);
-console.log(player);
-
-// Handles if rock is picked over scissors
-
 
 // Handles losing
-// if (npc > player || npc === 0 && player === 2) {
-// console.log("You lost!");
-// }
-
+if (npc > player && !(player === 0 && npc === 2) || player === 2 && npc === 0) {
+    console.log(`You Lose! ${jajankenValues[npc]} beats ${jajankenValues[player]}`);
+}
 // Handles tie
-
+if (npc === player) {
+    console.log(`It's a tie! You both picked ${jajankenValues[npc]}`);
+}
 
 // Handles win
-// if (player > npc || player === 0 && npc === 2) {
-//     console.log("You win!");
-//     }
+if (npc < player && !(player === 2 && npc === 0) || player === 0 && npc === 2) {
+    console.log(`You win! ${jajankenValues[player]} beats ${jajankenValues[npc]}`);
+}
 }
 
 // Function to get NPC choice
