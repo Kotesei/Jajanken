@@ -10,6 +10,7 @@ const losses = document.querySelector(".losses")
 const ties = document.querySelector(".ties")
 const npcScore = document.querySelector(".npcPoints");
 const playerScore = document.querySelector(".playerPoints");
+let roundsContainer;
 
 // Jajanken values
 const jajankenValues = {
@@ -54,17 +55,12 @@ function animateBtns(gameState) {
 // Function to start Rock, Paper, Scissors
 function jajanken(npc, player, maxRounds) {
     curRounds++
-    
-    
     // Shows user the rounds.
     
     // Stop game if current round reaches maxRounds
     if (curRounds >= maxRounds) {
         animateBtns('end');
-        
-        
         // See if player or NPC has more and say who wins.
-        
         updateScore(npc, player, maxRounds);
         
     } else {
@@ -77,12 +73,8 @@ function jajanken(npc, player, maxRounds) {
         npcBtn.style.backgroundImage = `url(./images/${jajankenValues[npc]}.gif)`
         
         // Check who wins / loses
-        updateScore(npc, player, maxRounds);
-        
+        updateScore(npc, player, maxRounds); 
     };
-    
-    
-
 }
 
 // Function to get NPC choice
@@ -151,44 +143,12 @@ function updateScore(npc, player, maxRounds) {
         }    }
 
     results();
-    // Building one based off rounds
-
-    /*//////////////////////////
-    // Handles losing (No rounds)
-    if (npc > player && !(player === 0 && npc === 2) || player === 2 && npc === 0) {
-        playerLosses++
-        lose()
-        losses.innerHTML = ` ${playerLosses}`
-        
-    }
     
-    
-    // Handles tie (No rounds)
-    if (npc === player) {
-        playerTies++;
-        tie()
-        ties.innerHTML = ` ${playerTies}`
-        
-        
-    }
-    
-    // Handles win (No rounds)
-    if (npc < player && !(player === 2 && npc === 0) || player === 0 && npc === 2) {
-        playerWins++
-        win()
-        wins.innerHTML = ` ${playerWins}`
-    }
-    /////////////////////////////*/
     
     // console.log(`That makes ${playerWins} wins, ${playerLosses} losses, and ${playerTies} ties`);
     console.log(`Game ${curRounds} / ${maxRounds}: Player - ${playerScore.innerHTML} NPC - ${npcScore.innerHTML}`);
 }
 
-
-
-//////////////////
-
-// Add a h2 element above the game that mentions which round it is currently on.
 
 // Mouse enter player choice
 function playerSelectingChoice(e) {
@@ -200,40 +160,55 @@ function playerExitChoice(e) {  e.target.style.backgroundImage = `url(./images/i
 
 // Player clicks choice
 function playerChoice(userInput, rounds) {
-    jajanken(getComputerChoice(), getPlayerChoice(userInput), setRounds(rounds))
+    jajanken(getComputerChoice(), getPlayerChoice(userInput), rounds)
 }
 
 
 
 // Create a Play button that takes user input for rounds.
 function startGame() {
+    let gameRounds = setRounds(5)
     curRounds = 0;
-    const roundsContainer = `<h2>Start Game!!!<span class="setRounds"></span></h2>`
-        body.insertAdjacentHTML("afterbegin", roundsContainer)
-        animateBtns('start')
+    npcScore.innerHTML = 0
+    playerScore.innerHTML = 0
+    // h2 element above the game that mentions which round it is currently on.
     
-        for (let i = 0; i < buttons.length; i++) {
-            // If button has either the play--btn or npc--btn don't continue
-               if (buttons[i].classList.contains("npc--btn") || buttons[i].classList.contains("play--btn")) return
-    
-            // Give each button an ID
-               buttons[i].id = i
+    const insertRounds = `<h2 class="roundh2">Round: <span class="setRounds">${curRounds + 1} / ${gameRounds}</span></h2>`
 
-               function playerChoiceHandler() {
-                playerChoice(buttons[i].id, 5)
-            }
-               
-               // Give each choice a static fist image
-               buttons[i].style.backgroundImage = `url(./images/idle.png)`;
+    if (roundsContainer === undefined) body.insertAdjacentHTML("afterbegin", insertRounds)
+        else roundsContainer.outerHTML = insertRounds
+        roundsContainer = document.querySelector(".roundh2")
+
+    animateBtns('start')
     
-               // On mouse enter (hover) it'll play the gif
-                buttons[i].addEventListener('mouseenter', playerSelectingChoice)
-    
-                // On mouse exit it'll switch back to static image
-                buttons[i].addEventListener('mouseleave', playerExitChoice)
-    
-                // Runs the function to get the NPC choice and Player choice
-                buttons[i].addEventListener("click", playerChoiceHandler);
+    for (let i = 0; i < buttons.length; i++) {
+        // If button has either the play--btn or npc--btn don't continue
+        if (buttons[i].classList.contains("npc--btn") || buttons[i].classList.contains("play--btn")) return
+        
+        // Give each button an ID
+        buttons[i].id = i
+        
+        // Player sets choice
+ 
+
+       buttons[i].playerChoiceHandler = function (e) {
+        playerChoice(buttons[i].id, gameRounds);
+    };
+        
+   
+        
+        // Give each choice a static fist image
+        buttons[i].style.backgroundImage = `url(./images/idle.png)`;
+        
+        // On mouse enter (hover) it'll play the gif
+        buttons[i].addEventListener('mouseenter', playerSelectingChoice)
+        
+        // On mouse exit it'll switch back to static image
+        buttons[i].addEventListener('mouseleave', playerExitChoice)
+        
+        // Runs the function to get the NPC choice and Player choice
+        buttons[i].addEventListener("click", buttons[i].playerChoiceHandler);
+        
 
             playBtn.removeEventListener("click", startGame)
     } 
@@ -242,7 +217,22 @@ function startGame() {
 
 // ends the current game
 function endGame() {
+    for (let i = 0; i < buttons.length; i++) {
+        // If button has either the play--btn or npc--btn don't continue
+        if (buttons[i].classList.contains("npc--btn") || buttons[i].classList.contains("play--btn")) return 
+
+         // On mouse enter (hover) it'll play the gif
+     buttons[i].removeEventListener('mouseenter', playerSelectingChoice)
+        
+     // On mouse exit it'll switch back to static image
+     buttons[i].removeEventListener('mouseleave', playerExitChoice)
+     
+     // Runs the function to get the NPC choice and Player choice
+     buttons[i].removeEventListener("click", buttons[i].playerChoiceHandler);
     playBtn.addEventListener("click", startGame);
+    
+    }
+    
 
 }
 
