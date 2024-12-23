@@ -79,10 +79,7 @@ transition: bottom 2s ease, opacity 5s;
    
 }
 
-.npc button {
-    background-color: black;
-    background-image: none;
-}
+
 
 
 span {
@@ -102,6 +99,11 @@ span {
     color: #D3D0CB;
     padding: 1.5rem;
     border-radius: 10px;
+
+}
+
+.npc--action {
+    text-align: center;
 }
 
 .tracker h2 {
