@@ -41,7 +41,6 @@ function animateBtns(gameState) {
   if (gameState === 'end') {
     endGame();
     revealBtns.forEach(btn => {
-        console.log(btn);
         btn.style.opacity = "0"
         btn.style.bottom = "-100px"
        })
@@ -54,6 +53,7 @@ function animateBtns(gameState) {
 
 // Function to start Rock, Paper, Scissors
 function jajanken(npc, player, maxRounds) {
+    curRounds++
     
     
     // Shows user the rounds.
@@ -64,12 +64,11 @@ function jajanken(npc, player, maxRounds) {
         
         
         // See if player or NPC has more and say who wins.
-        console.log("game is over!");
+        
         updateScore(npc, player, maxRounds);
         
     } else {
-        curRounds++
-        body.firstChild.innerHTML = `Round: <span class="setRounds">${curRounds} / ${maxRounds}</span>`;
+        body.firstChild.innerHTML = `Round: <span class="setRounds">${curRounds + 1} / ${maxRounds}</span>`;
    
         // Allow NPC choice to fade in/out and only play once it's called for.
         
@@ -102,35 +101,87 @@ function setRounds(num) {
 }
 
 // Function to update score
-function updateScore(npc, player) {
-    // Handles losing
+function updateScore(npc, player, maxRounds) {
+
+    function lose() {
+        console.log(`You Lose! ${jajankenValues[npc]} beats ${jajankenValues[player]}`);
+        npcScore.innerHTML++
+    }
+    function win() {
+        console.log(`You win! ${jajankenValues[player]} beats ${jajankenValues[npc]}`);
+        playerScore.innerHTML++
+    }
+    function tie() {
+        console.log(`It's a tie! You both picked ${jajankenValues[npc]}`);
+    }
+    function compareScore() {
+        const playerPoints = playerScore.innerHTML
+        const npcPoints = npcScore.innerHTML
+
+        if (playerPoints > npcPoints) {console.log("You won the game!")
+            playerWins++
+            wins.innerHTML = ` ${playerWins}`
+
+        };
+        if (playerPoints === npcPoints) {console.log("Nobody won!")
+            playerTies++
+            ties.innerHTML = ` ${playerTies}`
+        };
+        if (playerPoints < npcPoints) {console.log("You lost the game!")
+            playerLosses++
+            losses.innerHTML = ` ${playerLosses}`
+        };
+    }
+
+    function results() {
+        if (npc > player && !(player === 0 && npc === 2) || player === 2 && npc === 0){
+ 
+            if (maxRounds > curRounds) lose();
+            else compareScore()
+        }
+
+        if (npc === player) {
+            if (maxRounds > curRounds) tie();
+            else compareScore()
+        }
+
+        if (npc < player && !(player === 2 && npc === 0) || player === 0 && npc === 2) {
+            if (maxRounds > curRounds) win();
+            else compareScore()
+        }    }
+
+    results();
+    // Building one based off rounds
+
+    /*//////////////////////////
+    // Handles losing (No rounds)
     if (npc > player && !(player === 0 && npc === 2) || player === 2 && npc === 0) {
         playerLosses++
-        console.log(`You Lose! ${jajankenValues[npc]} beats ${jajankenValues[player]}`);
+        lose()
         losses.innerHTML = ` ${playerLosses}`
-        npcScore.innerHTML++
-    
+        
     }
     
     
-    // Handles tie
+    // Handles tie (No rounds)
     if (npc === player) {
         playerTies++;
-        console.log(`It's a tie! You both picked ${jajankenValues[npc]}`);
+        tie()
         ties.innerHTML = ` ${playerTies}`
         
         
     }
     
-    // Handles win
+    // Handles win (No rounds)
     if (npc < player && !(player === 2 && npc === 0) || player === 0 && npc === 2) {
         playerWins++
-        console.log(`You win! ${jajankenValues[player]} beats ${jajankenValues[npc]}`);
+        win()
         wins.innerHTML = ` ${playerWins}`
-        playerScore.innerHTML++
     }
+    /////////////////////////////*/
     
-    console.log(`That makes ${playerWins} wins, ${playerLosses} losses, and ${playerTies} ties`);
+    // console.log(`That makes ${playerWins} wins, ${playerLosses} losses, and ${playerTies} ties`);
+    console.log(`Game ${curRounds} / ${maxRounds}: Player - ${playerScore.innerHTML} NPC - ${npcScore.innerHTML}`);
 }
 
 
@@ -156,7 +207,7 @@ function playerChoice(userInput, rounds) {
 
 // Create a Play button that takes user input for rounds.
 function startGame() {
-    curRounds = 1;
+    curRounds = 0;
     const roundsContainer = `<h2>Start Game!!!<span class="setRounds"></span></h2>`
         body.insertAdjacentHTML("afterbegin", roundsContainer)
         animateBtns('start')
